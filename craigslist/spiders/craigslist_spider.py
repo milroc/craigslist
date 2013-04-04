@@ -19,13 +19,12 @@ class CraigslistSpider(BaseSpider):
         @scrapes title link
         '''
         hxs = HtmlXPathSelector(response)
-        rows = hxs.select("//p[@class='row']")
         items = []
+        rows = hxs.select("//p[@class='row']")
         for row in rows:
             item = CraigslistItem()
-            links = row.select("//span[@class='pl']")
-            for link in links:
-                item['title'] = link.select('a/text()').extract()
-                item['link'] = link.select('a/@href').extract()
+            link = row.select("span[@class='pl']")
+            item['title'] = link.select('a/text()').extract()
+            item['link'] = link.select('a/@href').extract()
             items.append(item)
         return items
