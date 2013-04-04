@@ -2,6 +2,7 @@ from scrapy.spider import BaseSpider
 from scrapy.selector import HtmlXPathSelector
 from craigslist.items import CraigslistItem
 
+
 def _selector_regex(selector, regex):
     try:
         return selector.re(regex)[0]
@@ -37,12 +38,6 @@ class CraigslistSpider(BaseSpider):
             price_br_sqft = itempnr.select('text()')
             item['price_br_sqft'] = price_br_sqft.extract()[0]
             item['price'] = int(_selector_regex(price_br_sqft, r' \$(\d+(?:,\d+)?)'))
-#            try:
-#                item['price'] = int(price_br_sqft.re(r' \$(\d+(?:,\d+)?)')[0])
-#            except IndexError:
-#                item['price'] = None
-            
-
             item['neighborhood'] = itempnr.select('font[@size="-1"]/text()').extract()
             items.append(item)
         return items
