@@ -2,32 +2,47 @@ from scrapy.spider import BaseSpider
 from scrapy.selector import HtmlXPathSelector
 from craigslist.items import CraigslistItem
 
+def _selector_regex(selector, regex):
+    try:
+        return selector.re(regex)[0]
+    except IndexError:
+        return None
+
+
 class CraigslistSpider(BaseSpider):
     name = 'craigslist'
     allowed_domains = [
         'sfbay.craigslist.org',
     ]
     start_urls = [
-        'http://sfbay.craigslist.org/apa/',
+        'http://sfbay.craigslist.org/sfc/apa/',
+        'http://sfbay.craigslist.org/sfc/roo/',
     ]
-
     def parse(self, response):
         '''Parses a craigslist response.
 
         @url http://sfbay.craigslist.org/apa/
         @returns items 50
-        @scrapes title link price_br neighborhood
+        @scrapes title link price neighborhood
         '''
         hxs = HtmlXPathSelector(response)
         items = []
         rows = hxs.select("//p[@class='row']")
         for row in rows:
             item = CraigslistItem()
-            link    = row.select("span[@class='pl']")
-            item['title']           = link.select('a/text()').extract()
-            item['link']            = link.select('a/@href').extract()
+            link = row.select("span[@class='pl']")
+            item['title'] = link.select('a/text()').extract()
+            item['link'] = link.select('a/@href').extract()
             itempnr = row.select("span[@class='itempnr']")
-            item['price_br_sqft']   = itempnr.select('text()').extract()[0]
-            item['neighborhood']   = itempnr.select('font[@size="-1"]/text()').extract()
+            price_br_sqft = itempnr.select('text()')
+            item['price_br_sqft'] = price_br_sqft.extract()[0]
+            item['price'] = int(_selector_regex(price_br_sqft, r' \$(\d+(?:,\d+)?)'))
+#            try:
+#                item['price'] = int(price_br_sqft.re(r' \$(\d+(?:,\d+)?)')[0])
+#            except IndexError:
+#                item['price'] = None
+            
+
+            item['neighborhood'] = itempnr.select('font[@size="-1"]/text()').extract()
             items.append(item)
         return items
