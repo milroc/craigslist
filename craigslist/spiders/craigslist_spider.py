@@ -16,7 +16,7 @@ class CraigslistSpider(BaseSpider):
 
         @url http://sfbay.craigslist.org/apa/
         @returns items 50
-        @scrapes title link price_br
+        @scrapes title link price_br neighborhood
         '''
         hxs = HtmlXPathSelector(response)
         items = []
@@ -24,9 +24,10 @@ class CraigslistSpider(BaseSpider):
         for row in rows:
             item = CraigslistItem()
             link    = row.select("span[@class='pl']")
-            itempnr = row.select("span[@class='itempnr']")
             item['title']           = link.select('a/text()').extract()
             item['link']            = link.select('a/@href').extract()
+            itempnr = row.select("span[@class='itempnr']")
             item['price_br_sqft']   = itempnr.select('text()').extract()[0]
+            item['neighborhood']   = itempnr.select('font[@size="-1"]/text()').extract()
             items.append(item)
         return items

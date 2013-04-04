@@ -9,3 +9,4 @@ class CraigslistItem(Item):
     title = Field()
     link = Field()
     price_br_sqft = Field()
+    neighborhood = Field()
