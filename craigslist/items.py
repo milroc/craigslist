@@ -13,3 +13,6 @@ class CraigslistItem(Item):
     square_feet = Field()
     title = Field()
     post_number = Field()
+    latitude = Field()
+    longitude = Field()
+    type_of_post = Field()
