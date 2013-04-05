@@ -10,5 +10,5 @@ class CraigslistItem(Item):
     link = Field()
     price = Field()
     num_bedrooms = Field()
-    price_br_sqft = Field()
     title = Field()
+    post_number = Field()

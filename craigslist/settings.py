@@ -10,6 +10,7 @@ BOT_NAME = 'craigslist'
 
 SPIDER_MODULES = ['craigslist.spiders']
 NEWSPIDER_MODULE = 'craigslist.spiders'
+ITEM_PIPELINES = ['craigslist.pipelines.CraigslistPipeline',]
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'craigslist (+http://www.yourdomain.com)'

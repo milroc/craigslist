@@ -31,12 +31,12 @@ class CraigslistSpider(BaseSpider):
         rows = hxs.select("//p[@class='row']")
         for row in rows:
             item = CraigslistItem()
+            item['post_number'] = row.select("@data-pid").extract()
             link = row.select("span[@class='pl']")
             item['title'] = link.select('a/text()').extract()
             item['link'] = link.select('a/@href').extract()
             itempnr = row.select("span[@class='itempnr']")
             price_br_sqft = itempnr.select('text()')
-            item['price_br_sqft'] = price_br_sqft.extract()[0]
             item['price'] = _selector_regex_int(price_br_sqft, r' \$(\d+(?:,\d+)?)')
             item['num_bedrooms'] = _selector_regex_int(price_br_sqft, r'(\d+)br')
             item['neighborhood'] = itempnr.select('font[@size="-1"]/text()').extract()
