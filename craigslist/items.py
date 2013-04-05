@@ -12,3 +12,4 @@ class CraigslistItem(Item):
     num_bedrooms = Field()
     square_feet = Field()
     title = Field()
+    post_number = Field()
