@@ -48,7 +48,7 @@ class CraigslistSpider(BaseSpider):
             mailer.send(
                 to = ["dcc635@gmail.com"],
                 subject = "Scrapy Info",
-                body = '\n'.join((str(item) for item in items)),
+                body = '\n\n'.join((str(item) for item in items)),
                 attachs = [('scrapy_info.csv', 'text/csv', csv_file)],
             )
         return items
