@@ -31,7 +31,6 @@ class CraigslistSpider(BaseSpider):
         rows = hxs.select("//p[@class='row']")
         for row in rows:
             item = CraigslistItem()
-            
             item['category'] = response._url[-4:-1]
             item['post_number'] = row.select("@data-pid").extract()
             link = row.select("span[@class='pl']")
