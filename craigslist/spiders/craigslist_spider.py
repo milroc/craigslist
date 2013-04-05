@@ -1,7 +1,6 @@
 from scrapy.spider import BaseSpider
 from scrapy.selector import HtmlXPathSelector
 from craigslist.items import CraigslistItem
-from scrapy.mail import MailSender
 
 
 def _selector_regex_int(selector, regex):
@@ -43,13 +42,4 @@ class CraigslistSpider(BaseSpider):
             item['square_feet'] = _selector_regex_int(price_br_sqft, r'(\d+)ft')
             item['neighborhood'] = itempnr.select('font[@size="-1"]/text()').extract()
             items.append(item)
-
-        mailer = MailSender.from_settings(self.settings)
-        with open('list.csv', 'r') as csv_file:
-            mailer.send(
-                to = ["dcc635@gmail.com"],
-                subject = "Scrapy Info",
-                body = '\n\n'.join((str(item) for item in items)),
-                attachs = [('scrapy_info.csv', 'text/csv', csv_file)],
-            )
         return items
