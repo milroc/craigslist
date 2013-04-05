@@ -15,4 +15,4 @@ class CraigslistItem(Item):
     post_number = Field()
     latitude = Field()
     longitude = Field()
-    type_of_post = Field()
+    category = Field()

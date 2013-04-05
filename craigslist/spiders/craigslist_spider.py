@@ -1,7 +1,6 @@
 from scrapy.spider import BaseSpider
 from scrapy.selector import HtmlXPathSelector
 from craigslist.items import CraigslistItem
-import q
 
 def _selector_regex_int(selector, regex):
     try:
@@ -33,7 +32,7 @@ class CraigslistSpider(BaseSpider):
         for row in rows:
             item = CraigslistItem()
             
-            item['type_of_post'] = response._url[-4:-1]
+            item['category'] = response._url[-4:-1]
             item['post_number'] = row.select("@data-pid").extract()
             link = row.select("span[@class='pl']")
             item['title'] = link.select('a/text()').extract()
@@ -44,12 +43,7 @@ class CraigslistSpider(BaseSpider):
             item['num_bedrooms'] = _selector_regex_int(price_br_sqft, r'(\d+)br')
             item['square_feet'] = _selector_regex_int(price_br_sqft, r'(\d+)ft')
             item['neighborhood'] = itempnr.select('font[@size="-1"]/text()').extract()
-            try:
-                item['latitude'] = row.select("@data-latitude").extract()
-                item['longitude'] = row.select("@data-longitude").extract()
-            except:
-                # Not pythonic but testing out the library
-                item['latitude'] = "NOOOO"
-                item['longitude'] = "NOOOO"
+            item['latitude'] = row.select("@data-latitude").extract()
+            item['longitude'] = row.select("@data-longitude").extract()
             items.append(item)
         return items
